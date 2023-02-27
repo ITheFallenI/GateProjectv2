@@ -1,4 +1,4 @@
-# GateProjectv2
+# Gate Project v2
 
 Project for my home made Eletric gates.
 
