@@ -268,6 +268,7 @@ void CommandLoop(){
   
     if(Serial.available()){
         command = Serial.readStringUntil('\n');
+        command.toLowerCase();
          
         Serial.println("You sent command {" + command + "}");
 
