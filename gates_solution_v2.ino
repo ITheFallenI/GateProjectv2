@@ -132,7 +132,7 @@ void ResetButtons(){
       //button down
       motors.SetMotor2PreviousVal(true);
       motors.CloseMotor_2_On();
-      Serial.println("Reset Motor1 button pressed..");
+      Serial.println("Reset Motor2 button pressed..");
     }
 
     if(!motors.ResetMotor2Pressed()){  
@@ -148,6 +148,7 @@ void ResetButtons(){
           memory.SetGateStateClosed();
       }
     }
+
 }
 
 

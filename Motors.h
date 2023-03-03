@@ -13,8 +13,8 @@ class Motors{
 
 
   #define STOP_BUTTON 7
-  #define RESET_NOTOR1_BUTTON 38
-  #define RESET_NOTOR2_BUTTON 34
+  #define RESET_NOTOR1_BUTTON 47
+  #define RESET_NOTOR2_BUTTON 10
 
   private:
     Motors::Toggles(bool toggleBool, int pinNumber);

@@ -6,16 +6,16 @@ class Pins{
   #define LOCK_PIN 6
   #define STOP_BUTTON 7
   
-  #define RESET_NOTOR1_BUTTON 38
-  #define RESET_NOTOR2_BUTTON 34
+  #define RESET_NOTOR1_BUTTON 47
+  #define RESET_NOTOR2_BUTTON 10
   
-  #define MOTOR_1_MAINS A9 //13  //mains power to motor #1
-  #define MOTOR_1_UP 12     //mains to motor #1 up
-  #define MOTOR_1_DOWN 11   //mains to motor #1 up
+  #define MOTOR_1_MAINS 31 //13  //mains power to motor #1
+  #define MOTOR_1_UP 29     //mains to motor #1 up
+  #define MOTOR_1_DOWN 34   //mains to motor #1 up
   
-  #define MOTOR_2_MAINS 10  //mains power to motor #1
-  #define MOTOR_2_UP 8      //mains to motor #1 up
-  #define MOTOR_2_DOWN 9    //mains to motor #1 up
+  #define MOTOR_2_MAINS 25  //mains power to motor #1
+  #define MOTOR_2_UP 23      //mains to motor #1 up
+  #define MOTOR_2_DOWN 27    //mains to motor #1 up
 
   public:
     void Setup(){
