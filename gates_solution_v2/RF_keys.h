@@ -25,13 +25,13 @@ class RF_keys{
 
     bool GETKEYDOWN(int KEY){
       switch(KEY){
-        case 5:
+        case KEY_A():
           return a_key_down;
-        case 4:
+        case KEY_B():
           return b_key_down;
-        case 2:
+        case KEY_C():
           return c_key_down;
-        case 3:
+        case KEY_D():
           return d_key_down;
         default:
           return 0;
