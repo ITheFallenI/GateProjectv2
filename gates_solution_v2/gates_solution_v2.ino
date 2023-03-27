@@ -103,6 +103,20 @@ void Inputs(){
         
         //motors.OpenMotor_2_Off();
     }
+
+    //if D Key..
+    if(rf_keys.GETKEYDOWN(rf_keys.KEY_D())){ 
+        Serial.println("D Button down.");
+        Serial.println("Emergency Stop button from D key..");
+        pins.DisableLock();
+        MUST_STOP = true;
+        isOpeningGate = false;
+        isClosingGate = false;  
+        Serial.println("MUST_STOP = " + String(MUST_STOP));
+        Serial.println("isOpeningGate"+ String(isOpeningGate));
+        Serial.println("isClosingGate"+ String(isClosingGate));
+        motors.EmergencyStop();
+    }
 }
 
 void ResetButtons(){
@@ -305,7 +319,21 @@ void CommandLoop(){
             if(isGateOpenState){
               CloseGates();
             }
+        }else if(command.equals("setStateClosed.")){
+            Serial.println("received command  setStateClosed.");
+            motors.CloseMotor_1_Off();
+            motors.CloseMotor_2_Off();
+            isGateClosedState = true;
+            isGateOpenState = false;
+            MUST_STOP = false;
+            isOpeningGate = false;
+            isClosingGate = false; 
+            pins.EnableLock();
+            motors.SetMotor1PreviousVal(false); 
+            motors.SetMotor2PreviousVal(false);  
+            memory.SetGateStateClosed();
         }
+
         else{
             Serial.println("Invalid command");
         }
