@@ -46,6 +46,10 @@ void setup() {
   Serial.println("Setup complete!");
   Serial.println("---------------------------------");
 
+
+ 
+  pins.EnableLock();
+
   motors.CloseMotor_1_Off();
   motors.CloseMotor_2_Off();
   motors.OpenMotor_1_Off();
@@ -67,7 +71,7 @@ void loop() {
 void EmergencyStopButtonLoop(){
   if(motors.EmergencyStopPressed() && motors.canCallEmergencyStop()){      
     Serial.println("Emergency Stop button pressed..");
-    pins.CloseLock();
+    pins.DisableLock();
     MUST_STOP = true;
     isOpeningGate = false;
     isClosingGate = false;  
@@ -120,7 +124,8 @@ void ResetButtons(){
           isGateOpenState = false;
           MUST_STOP = false;
           isOpeningGate = false;
-          isClosingGate = false;
+          isClosingGate = false; 
+          pins.EnableLock();
           motors.SetMotor1PreviousVal(false);  
           memory.SetGateStateClosed();
       }
@@ -144,6 +149,7 @@ void ResetButtons(){
           MUST_STOP = false; 
           isOpeningGate = false;
           isClosingGate = false;      
+          pins.EnableLock();
           motors.SetMotor2PreviousVal(false);  
           memory.SetGateStateClosed();
       }
@@ -156,9 +162,9 @@ void OpenGates(){
   Serial.println("Open gates init.");
 
   unsigned int delayBetweenOpening = 8000;  
-  unsigned int leftGateOpeningTime = 16100;
-  unsigned int rightGateOpeningTime = 16600;
-  unsigned int delayForLock = 1000;
+  unsigned int leftGateOpeningTime = 16600;
+  unsigned int rightGateOpeningTime = 16100;
+  unsigned int delayForLock = 2000;
 
   unsigned int fullOpenTime = delayForLock + leftGateOpeningTime + (rightGateOpeningTime - (rightGateOpeningTime - delayBetweenOpening)) + 1000;
   OpenTimer.SetCurrentTimer(fullOpenTime);
@@ -173,8 +179,8 @@ void OpenGates(){
     EmergencyStopButtonLoop();
 
     if(OpenTimer.GetCurrentTimer() == (fullOpenTime - 100)){
-      Serial.println(String(100) + " ms into timer, Opened Lock.");
-      pins.OpenLock();
+      Serial.println(String(100) + " ms into timer, Disable Lock.");
+      pins.DisableLock();
     }
 
     if(OpenTimer.GetCurrentTimer() == (fullOpenTime - delayForLock)){    
@@ -202,7 +208,6 @@ void OpenGates(){
 
       isGateOpenState = true;
       isGateClosedState = false;
-      pins.CloseLock();
       Serial.println(String(fullOpenTime) + " ms into timer, Opening gate operation over. Timer ended..");
     }
   }
@@ -212,14 +217,14 @@ void CloseGates(){
   Serial.println("Close gates init.");
 
   unsigned int delayBetweenClosing = 20000;  
-  unsigned int leftGateClosingTime = 27000;
-  unsigned int rightGateClosingTime = 27000;
-  unsigned int delayForLock = 1000;
+  unsigned int leftGateClosingTime = 28000;
+  unsigned int rightGateClosingTime = 26000;
+  unsigned int delayForLock = 2000;
 
   unsigned int fullCloseTime = delayForLock + leftGateClosingTime + (rightGateClosingTime - (rightGateClosingTime - delayBetweenClosing)) + 1000;
   Serial.println(fullCloseTime);
   CloseTimer.SetCurrentTimer(fullCloseTime);
-  CloseTimer.SetShowLogger(true);
+  CloseTimer.SetShowLogger(false);
   //Serial.print(fullOpenTime);
   isClosingGate = true; 
   memory.SetGateStateClosed();
@@ -230,6 +235,10 @@ void CloseGates(){
     rf_keys.RF_INPUT_LOOP();
     EmergencyStopButtonLoop();
 
+    if(CloseTimer.GetCurrentTimer() == (fullCloseTime - 100)){
+      Serial.println(String(100) + " ms into timer, Enable Magnet.");
+      pins.EnableLock();
+    }
     if(CloseTimer.GetCurrentTimer() == (fullCloseTime - delayForLock)){    
       Serial.println(String(delayForLock) + " ms into timer, can start Motor 2.");
       motors.CloseMotor_2_On();
@@ -276,7 +285,7 @@ void CommandLoop(){
         }
         else if(command.equals("stop")){       
                 Serial.println("Emergency Stop command..");
-                pins.CloseLock();
+                pins.DisableLock();
                 MUST_STOP = true;
                 isOpeningGate = false;
                 isClosingGate = false;  
