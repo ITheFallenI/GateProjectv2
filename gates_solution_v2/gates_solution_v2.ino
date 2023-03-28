@@ -4,10 +4,14 @@
 #include "Timer.h"
 #include "Memory.h"
 
+#include "TestSD.h"
+
 Pins pins;
 Motors motors;
 RF_keys rf_keys;
 Memory memory;
+
+TestSD testSD;
 
 Timer OpenTimer = {0, 0, 100};
 Timer CloseTimer = {0, 0, 100};
@@ -332,6 +336,8 @@ void CommandLoop(){
             motors.SetMotor1PreviousVal(false); 
             motors.SetMotor2PreviousVal(false);  
             memory.SetGateStateClosed();
+        }else if(command.equals("testSD")){
+            testSD.TestMySD();
         }
 
         else{
