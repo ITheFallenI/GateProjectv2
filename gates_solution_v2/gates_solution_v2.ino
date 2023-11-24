@@ -24,23 +24,27 @@ bool isClosingGate = false;
 bool isGateClosedState = true;
 bool isGateOpenState = false;
 
+
+/**/
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   Serial.println("---------------------------------");
   Serial.println("Setup init.");
 
-  /*          Gate State loading from memory        */
-  String gateState = memory.ReadGateStates();
+	/*          Gate State loading from SD        */
 
+	String gateState = testSD.ReadSD();
   Serial.println(String(gateState));
+
 
   isGateOpenState = memory.returnBool(String(gateState)[0]);
   isGateClosedState = memory.returnBool(String(gateState)[1]);
 
   Serial.println("isGateOpenState = " + String(isGateOpenState));
   Serial.println("isGateClosedState = " + String(isGateClosedState));
-  /*          Gate State loading from memory        */
+
+	/*          Gate State loading from SD        */
 
 
   pins.Setup();
@@ -145,7 +149,7 @@ void ResetButtons(){
           isClosingGate = false; 
           pins.EnableLock();
           motors.SetMotor1PreviousVal(false);  
-          memory.SetGateStateClosed();
+          testSD.SetGateStateClosed();
       }
     }
 
@@ -169,7 +173,7 @@ void ResetButtons(){
           isClosingGate = false;      
           pins.EnableLock();
           motors.SetMotor2PreviousVal(false);  
-          memory.SetGateStateClosed();
+          testSD.SetGateStateClosed();
       }
     }
 
@@ -180,16 +184,16 @@ void OpenGates(){
   Serial.println("Open gates init.");
 
   unsigned int delayBetweenOpening = 8000;  
-  unsigned int leftGateOpeningTime = 16600;
-  unsigned int rightGateOpeningTime = 16100;
+  unsigned int leftGateOpeningTime = 17000;
+  unsigned int rightGateOpeningTime = 16600;
   unsigned int delayForLock = 2000;
 
-  unsigned int fullOpenTime = delayForLock + leftGateOpeningTime + (rightGateOpeningTime - (rightGateOpeningTime - delayBetweenOpening)) + 1000;
+  unsigned int fullOpenTime = delayForLock + leftGateOpeningTime + 1000;
   OpenTimer.SetCurrentTimer(fullOpenTime);
   OpenTimer.SetShowLogger(false);
   Serial.println(fullOpenTime);
   isOpeningGate = true;
-  memory.SetGateStateOpen();
+  testSD.SetGateStateOpen();
 
   while (isOpeningGate && !MUST_STOP) {
     OpenTimer.UpdateTimer();
@@ -208,7 +212,7 @@ void OpenGates(){
 
     if(OpenTimer.GetCurrentTimer() == (fullOpenTime - (delayBetweenOpening + delayForLock))){    
       Serial.println(String(delayBetweenOpening + delayForLock) + " ms into timer, can start Motor 2.");
-      motors.OpenMotor_2_On();
+      //motors.OpenMotor_2_On();
     }
 
     if(OpenTimer.GetCurrentTimer() == (fullOpenTime - (leftGateOpeningTime + delayForLock))){    
@@ -218,7 +222,7 @@ void OpenGates(){
     
     if(OpenTimer.GetCurrentTimer() == (fullOpenTime - (rightGateOpeningTime + delayForLock + delayBetweenOpening))){    
       Serial.println(String((fullOpenTime - (rightGateOpeningTime + delayForLock + delayBetweenOpening))) + " ms into timer, can stop Motor 2.");
-      motors.OpenMotor_2_Off();
+      //motors.OpenMotor_2_Off();
     }
     
     if(OpenTimer.GetCurrentTimer() == 0 || OpenTimer.GetCurrentTimer() <= 99){
@@ -235,17 +239,17 @@ void CloseGates(){
   Serial.println("Close gates init.");
 
   unsigned int delayBetweenClosing = 20000;  
-  unsigned int leftGateClosingTime = 28000;
-  unsigned int rightGateClosingTime = 26000;
+  unsigned int leftGateClosingTime = 28500;
+  unsigned int rightGateClosingTime = 28500;
   unsigned int delayForLock = 2000;
 
-  unsigned int fullCloseTime = delayForLock + leftGateClosingTime + (rightGateClosingTime - (rightGateClosingTime - delayBetweenClosing)) + 1000;
+  unsigned int fullCloseTime = delayForLock + leftGateClosingTime + 1000;
   Serial.println(fullCloseTime);
   CloseTimer.SetCurrentTimer(fullCloseTime);
   CloseTimer.SetShowLogger(false);
   //Serial.print(fullOpenTime);
   isClosingGate = true; 
-  memory.SetGateStateClosed();
+  testSD.SetGateStateClosed();
 
   Serial.println(fullCloseTime - (leftGateClosingTime + delayForLock + delayBetweenClosing) + 1400);
   while (isClosingGate && !MUST_STOP){
@@ -259,21 +263,11 @@ void CloseGates(){
     }
     if(CloseTimer.GetCurrentTimer() == (fullCloseTime - delayForLock)){    
       Serial.println(String(delayForLock) + " ms into timer, can start Motor 2.");
-      motors.CloseMotor_2_On();
-    }
-
-    if(CloseTimer.GetCurrentTimer() == (fullCloseTime - (delayBetweenClosing + delayForLock))){    
-      Serial.println(String(delayBetweenClosing + delayForLock) + " ms into timer, can start Motor 1.");
       motors.CloseMotor_1_On();
     }
 
     if(CloseTimer.GetCurrentTimer() == (fullCloseTime - (rightGateClosingTime + delayForLock))){    
       Serial.println(String(rightGateClosingTime + delayForLock) + " ms into timer, can stop Motor 2.");
-      motors.CloseMotor_2_Off();
-    }
-
-    if(CloseTimer.GetCurrentTimer() == (fullCloseTime - (leftGateClosingTime + delayForLock + delayBetweenClosing) + 1400)){    
-      Serial.println(String(leftGateClosingTime + delayForLock + delayBetweenClosing) + " ms into timer, can stop Motor 1.");
       motors.CloseMotor_1_Off();
     }
 
@@ -335,9 +329,12 @@ void CommandLoop(){
             pins.EnableLock();
             motors.SetMotor1PreviousVal(false); 
             motors.SetMotor2PreviousVal(false);  
-            memory.SetGateStateClosed();
+            testSD.SetGateStateClosed();
         }else if(command.equals("testSD")){
             testSD.TestMySD();
+        }else if(command.equals("getGateState")){          
+          Serial.println("isGateOpenState = " + String(isGateOpenState));
+          Serial.println("isGateClosedState = " + String(isGateClosedState));
         }
 
         else{
