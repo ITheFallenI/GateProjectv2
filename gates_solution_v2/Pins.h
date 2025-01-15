@@ -8,6 +8,9 @@ class Pins{
   
   #define RESET_NOTOR2_BUTTON 47
   #define RESET_NOTOR1_BUTTON 10
+
+  #define OPEN_NOTOR2_BUTTON 40
+  #define OPEN_NOTOR1_BUTTON 38
   
   #define MOTOR_2_MAINS 31 //13  //mains power to motor #1
   #define MOTOR_2_UP 29     //mains to motor #1 up
@@ -26,6 +29,10 @@ class Pins{
       //reset buttons
       pinMode(RESET_NOTOR1_BUTTON, INPUT_PULLUP);
       pinMode(RESET_NOTOR2_BUTTON, INPUT_PULLUP);
+
+      //open gates buttons
+      pinMode(OPEN_NOTOR1_BUTTON, INPUT_PULLUP);
+      pinMode(OPEN_NOTOR2_BUTTON, INPUT_PULLUP);
 
       //motor #1
       pinMode(MOTOR_1_MAINS, OUTPUT);

@@ -95,7 +95,7 @@ Motors::Toggles(bool toggleBool, int pinNumber) {
 Motors::EmergencyStop(){
   Serial.println(String(MOTOR_1_UP_BOOL) + String(MOTOR_1_DOWN_BOOL) + String(MOTOR_2_UP_BOOL) + String(MOTOR_2_DOWN_BOOL));
 
-  if(MOTOR_1_UP_BOOL == true || MOTOR_1_DOWN_BOOL == true || MOTOR_2_UP_BOOL == true || MOTOR_2_DOWN_BOOL == true){ 
+  if(MOTOR_1_UP_BOOL == true || MOTOR_1_DOWN_BOOL == true || MOTOR_2_UP_BOOL == true || MOTOR_2_DOWN_BOOL == true || MOTOR_1_MAINS_BOOL == true){ 
     Serial.println("Called emergency stop...");
     Motors::OpenMotor_1_Off();
     Motors::CloseMotor_1_Off();

@@ -16,10 +16,15 @@ class Motors{
   #define RESET_NOTOR1_BUTTON 47
   #define RESET_NOTOR2_BUTTON 10
 
+  #define OPEN_NOTOR2_BUTTON 40
+  #define OPEN_NOTOR1_BUTTON 38
+
   private:
     Motors::Toggles(bool toggleBool, int pinNumber);
     bool resetMotor1_previousVal = false;
     bool resetMotor2_previousVal = false;
+    bool openMotor1_previousVal = false;
+    bool openMotor2_previousVal = false;
   public:
     Motors::Motors();
 
@@ -47,6 +52,16 @@ class Motors{
 
     void SetMotor2PreviousVal(bool value){ resetMotor2_previousVal = value; }
     bool GetMotor2PreviousVal(){ return resetMotor2_previousVal; }
+
+
+
+    bool OpenMotor1Pressed(){ int buttonValue = digitalRead(OPEN_NOTOR1_BUTTON); if (buttonValue == HIGH){ return true; }else { return false; } }
+    bool OpenMotor2Pressed(){ int buttonValue = digitalRead(OPEN_NOTOR2_BUTTON); if (buttonValue == HIGH){ return true; }else { return false; } }
+    void SetOpenMotor1PreviousVal(bool value){ openMotor1_previousVal = value; }
+    bool GetOpenMotor1PreviousVal(){ return openMotor1_previousVal; }
+
+    void SetOpenMotor2PreviousVal(bool value){ openMotor2_previousVal = value; }
+    bool GetOpenMotor2PreviousVal(){ return openMotor2_previousVal; }
 
 };
 
