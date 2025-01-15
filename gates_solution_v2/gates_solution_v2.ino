@@ -142,71 +142,48 @@ void Inputs(){
 }
 
 
-void OpenButtons(){
-  //button 1
-  if(motors.OpenMotor1Pressed()){      
+void OpenButtons() {
+  // Handle Button 1
+  if (motors.OpenMotor1Pressed()) {
+    if (!motors.GetOpenMotor1PreviousVal()) { // Detect first press
+      Serial.println("Open Motor1 button pressed.");
       motors.SetOpenMotor1PreviousVal(true);
 
-      if(!MUST_STOP){
-          Serial.println("Emergency Stop Motor1 button pressed..");
-          pins.DisableLock();
-          MUST_STOP = true;
-          isOpeningGate = false;
-          isClosingGate = false;  
-
-
-          delay(1000); 
+      if (MUST_STOP) {
+        Serial.println("MUST_STOP is true. Resetting due to Open Motor1 button press.");
+        pins.EnableLock(); // Re-enable the lock if necessary
+        MUST_STOP = false; // Allow operation again
       }
 
-
-      if(MUST_STOP){
-        motors.OpenMotor_1_On();
-      }
-  }
-  if(!motors.OpenMotor1Pressed()){   
-      if(motors.GetOpenMotor1PreviousVal()){         
-        Serial.println("open Motor1 button released..");
-
-
-        if(MUST_STOP){          
-          motors.OpenMotor_1_Off();
-        }
-        motors.SetOpenMotor1PreviousVal(false);
-      }
+      motors.OpenMotor_1_On(); // Turn on the motor
+    }
+  } else if (motors.GetOpenMotor1PreviousVal()) { // Detect release
+    Serial.println("Open Motor1 button released.");
+    motors.OpenMotor_1_Off(); // Ensure motor is turned off
+    motors.SetOpenMotor1PreviousVal(false);
   }
 
-  //button 2
-  if(motors.OpenMotor2Pressed()){   
-    
-      Serial.println("open Motor2 button pressed..");
+  // Handle Button 2
+  if (motors.OpenMotor2Pressed()) {
+    if (!motors.GetOpenMotor2PreviousVal()) { // Detect first press
+      Serial.println("Open Motor2 button pressed.");
       motors.SetOpenMotor2PreviousVal(true);
 
-      if(!MUST_STOP){
-          Serial.println("Emergency Stop Motor2 button pressed..");
-          pins.DisableLock();
-          MUST_STOP = true;
-          isOpeningGate = false;
-          isClosingGate = false;  
-
-
-          delay(1000); 
+      if (MUST_STOP) {
+        Serial.println("MUST_STOP is true. Resetting due to Open Motor2 button press.");
+        pins.EnableLock(); // Re-enable the lock if necessary
+        MUST_STOP = false; // Allow operation again
       }
 
-      if(MUST_STOP){
-        motors.OpenMotor_2_On();
-      }
+      motors.OpenMotor_2_On(); // Turn on the motor
+    }
+  } else if (motors.GetOpenMotor2PreviousVal()) { // Detect release
+    Serial.println("Open Motor2 button released.");
+    motors.OpenMotor_2_Off(); // Ensure motor is turned off
+    motors.SetOpenMotor2PreviousVal(false);
   }
-  if(!motors.OpenMotor2Pressed()){   
-      if(motors.GetOpenMotor2PreviousVal()){         
-        Serial.println("open Motor2 button released..");
-        if(MUST_STOP){          
-          motors.OpenMotor_2_Off();
-        }
-        motors.SetOpenMotor2PreviousVal(false);
-      }
-  }
-
 }
+
 
 void ResetButtons(){
 
