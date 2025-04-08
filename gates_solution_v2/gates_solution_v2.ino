@@ -31,7 +31,7 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   Serial.println("---------------------------------");
-  Serial.println("Setup init.");
+  Serial.println("Setup init...");
 
 	/*          Gate State loading from SD        */
 
