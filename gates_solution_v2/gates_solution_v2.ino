@@ -241,7 +241,7 @@ void ResetButtons(){
 
 
 void OpenGates(){
-  Serial.println("Open gates init.");
+  Serial.println("Open gates init..");
 
   unsigned int delayBetweenOpening = 8000;  
   unsigned int leftGateOpeningTime = 17500;
